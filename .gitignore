@@ -1,0 +1,10 @@
+__pycache__/
+build/
+dist/
+env/
+*.egg-info/
+*.sw[op]
+*.egg
+*.pyc
+.coverage
+LOCAL-VERSION
