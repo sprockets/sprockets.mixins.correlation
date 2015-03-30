@@ -13,13 +13,13 @@ install:
 script: nosetests
 after_success:
   - coveralls
-# deploy:
-#   provider: pypi
-#   user: sprockets
-#   distributions: "sdist bdist_wheel"
-#   on:
-#     python: 2.7
-#     tags: true
-#     all_branches: true
-#   password:
-#     secure: bBvJ6OIyeEb6dw7OiNiXXZwCiY6B9AqczH7uA0bTlQArF3glJxTBz7xRVaXQZpL36IWW591VFmu8YIrHiNY1eIUhIAP74BRSQyHxyvfU7HMr5R9qQrBaoBJOU
+deploy:
+  provider: pypi
+  user: aweber
+  password:
+    secure: fdn7NjeIHeo51VHhp+6LnviRYJtfd7As0dCMcwGf1X/STvKbTqp1b8usq9QjSacakde+ZdFsuNM1sImw/yUlft0ZbxksBE98sO+q6qdSMVnQyNtXSyc0Rifw5yyx3/lBdqI0JDGDnMzNWSL1CF5csX1GeUAZguP3kgiV3D8yChA=
+  distributions: "sdist bdist_wheel"
+  on:
+    python: 2.7
+    tags: true
+    all_branches: true
