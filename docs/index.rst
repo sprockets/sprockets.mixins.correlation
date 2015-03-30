@@ -1,5 +1,13 @@
 .. include:: ../README.rst
 
+API Documentation
+-----------------
+
+correlation.HandlerMixin
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: sprockets.mixins.correlation.HandlerMixin
+   :members:
+
 Contributing to this Library
 ----------------------------
 

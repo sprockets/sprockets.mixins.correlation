@@ -1,7 +1,6 @@
 Version History
 ---------------
 
-0.0.0
-~~~~~
-  - Nothing to see here
-
+Next Release
+~~~~~~~~~~~~
+ - Adds ``sprockets.mixins.correlation.HandlerMixin``

@@ -21,4 +21,6 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
+    'sprockets': ('https://sprockets.readthedocs.org/en/latest/', None),
+    'tornado': ('http://www.tornadoweb.org/en/latest/', None),
 }
