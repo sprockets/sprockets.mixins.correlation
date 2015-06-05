@@ -81,3 +81,31 @@ class HandlerMixin(object):
 
         """
         return self.request.headers.get(name, default)
+
+
+def correlation_id_logger(handler):
+    """ Custom Tornado access log writer that appends correlation-id.
+
+    This function can be used to append the coorelation-id to the
+    Tornado access logs. To use, simply set the value of the
+    log_function kwarg of the Tornado Application constructor to this
+    function.
+
+    *Example*
+    web.Application([], log_function=correlation_id_logger)
+
+    :param tornado.web.RequestHandler handler: the request handler that
+        is processing the client request.
+    """
+    if handler.get_status() < 400:
+        log_method = log.access_log.info
+    elif handler.get_status() < 500:
+        log_method = log.access_log.warning
+    else:
+        log_method = log.access_log.error
+    request_time = 1000.0 * handler.request.request_time()
+    correlation_id = getattr(handler, "correlation_id", None)
+    if correlation_id is None:
+        correlation_id = handler.request.headers.get('Correlation-ID', None)
+    log_method("%d %s %.2fms {CID %s}", handler.get_status(),
+               handler._request_summary(), request_time, correlation_id)
