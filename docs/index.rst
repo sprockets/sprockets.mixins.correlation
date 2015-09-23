@@ -3,9 +3,10 @@
 API Documentation
 -----------------
 
-correlation.HandlerMixin
-~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: sprockets.mixins.correlation.HandlerMixin
+   :members:
+
+.. autoclass:: sprockets.mixins.correlation.CorrelationAdapter
    :members:
 
 Contributing to this Library

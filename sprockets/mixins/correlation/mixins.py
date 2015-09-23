@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from tornado import gen, log
@@ -87,6 +88,32 @@ class HandlerMixin(object):
 
         """
         return self.request.headers.get(name, default)
+
+
+class CorrelationAdapter(logging.LoggerAdapter):
+    """
+    Adapt a :class:`logging.Logger` to include a correlation ID.
+
+    .. attribute:: correlation_id
+
+       Identifier that is appended to each log message if it is
+       set to a *truthy* value.
+
+    This simple adapter extends :class:`logging.LogAdapter` to insert
+    the :attr:`correlation_id` value into every message.  By default
+    the attribute's value is :data:`None`.  Set it to something else
+    in your ``prepare`` method if you are using the :class:`.LoggingMixin`.
+
+    """
+
+    def __init__(self, logger, extra=None):
+        self.correlation_id = None
+        logging.LoggerAdapter.__init__(self, logger, extra or {})
+
+    def process(self, msg, kwargs):
+        if self.correlation_id:
+            msg += ' {CID %s}' % (self.correlation_id, )
+        return logging.LoggerAdapter.process(self, msg, kwargs)
 
 
 def correlation_id_logger(handler):
