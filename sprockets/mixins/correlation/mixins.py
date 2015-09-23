@@ -90,6 +90,41 @@ class HandlerMixin(object):
         return self.request.headers.get(name, default)
 
 
+class LoggingMixin(HandlerMixin):
+    """
+    Add a correlated logger to a tornado.web.RequestHandler.
+
+    This mix-in adds a correlation id attribute by extending
+    :class:`.HandlerMixin` and then adds an adapted logger
+    attribute that will appends the correlation ID to every
+    message.
+
+    .. attribute:: logger
+
+       A :class:`.CorrelationAdapter` instance that appends the
+       current correlation id to every message if it is set.
+       If a ``logger`` attribute is present when ``super.initialize``
+       returns, then it will be adapted.  If not, a new logger
+       is created using :func:`logging.getLogger` with the object's
+       class name as the logger name.
+
+    """
+
+    def initialize(self):
+        super(LoggingMixin, self).initialize()
+        logger = getattr(self, 'logger',
+                         logging.getLogger(self.__class__.__name__))
+        self.logger = CorrelationAdapter(logger)
+
+    @gen.coroutine
+    def prepare(self):
+        maybe_future = super(LoggingMixin, self).prepare()
+        if maybe_future:
+            yield maybe_future
+        if not self._finished:
+            self.logger.correlation_id = self.correlation_id
+
+
 class CorrelationAdapter(logging.LoggerAdapter):
     """
     Adapt a :class:`logging.Logger` to include a correlation ID.

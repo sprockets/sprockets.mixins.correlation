@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from tornado import gen, testing, web
@@ -19,6 +20,23 @@ class CorrelatedRequestHandler(correlation.HandlerMixin, AsyncPreparer):
         if status_code >= 300:
             raise web.HTTPError(status_code)
         self.write('status {0}'.format(status_code))
+
+
+class LoggingRequestHandler(correlation.LoggingMixin, web.RequestHandler):
+
+    def get(self):
+        self.logger.info('request made')
+        self.set_status(204)
+
+
+class RecordingHandler(logging.Handler):
+
+    def __init__(self):
+        logging.Handler.__init__(self)
+        self.emitted = []
+
+    def emit(self, record):
+        self.emitted.append((record, self.format(record)))
 
 
 class CorrelationMixinTests(testing.AsyncHTTPTestCase):
@@ -44,3 +62,23 @@ class CorrelationMixinTests(testing.AsyncHTTPTestCase):
                                headers={'Correlation-Id': correlation_id})
         response = self.wait()
         self.assertEqual(response.headers['correlation-id'], correlation_id)
+
+
+class LoggingMixinTests(testing.AsyncHTTPTestCase):
+
+    def get_app(self):
+        return web.Application([(r'/log', LoggingRequestHandler)])
+
+    def setUp(self):
+        super(LoggingMixinTests, self).setUp()
+        self.recorder = RecordingHandler()
+        logging.getLogger().addHandler(self.recorder)
+
+    def tearDown(self):
+        super(LoggingMixinTests, self).tearDown()
+        logging.getLogger().removeHandler(self.recorder)
+
+    def test_that_correlation_id_is_logged(self):
+        self.fetch('/log')
+        record, msg = self.recorder.emitted[0]
+        self.assertTrue(msg.startswith('request made {CID'))

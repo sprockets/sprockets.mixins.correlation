@@ -9,6 +9,9 @@ API Documentation
 .. autoclass:: sprockets.mixins.correlation.CorrelationAdapter
    :members:
 
+.. autoclass:: sprockets.mixins.correlation.LoggingMixin
+   :members:
+
 Contributing to this Library
 ----------------------------
 

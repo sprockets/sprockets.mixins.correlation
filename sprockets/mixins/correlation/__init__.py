@@ -1,5 +1,5 @@
 try:
-    from .mixins import CorrelationAdapter, HandlerMixin
+    from .mixins import CorrelationAdapter, HandlerMixin, LoggingMixin
 
 # the following makes importing the module possible when tornado
 # is not installed in the active environment
@@ -8,6 +8,9 @@ except ImportError as exc:  # pragma no cover
         raise exc
 
     def HandlerMixin(*args, **kwargs):
+        raise exc
+
+    def LoggingMixin(*args, **kwargs):
         raise exc
 
 
