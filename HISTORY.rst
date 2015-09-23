@@ -1,8 +1,8 @@
 Version History
 ---------------
 
-`1.1.0`_
-~~~~~~~~
+`1.1.0`_ (23-Sep-2015)
+~~~~~~~~~~~~~~~~~~~~~~
 - Make ``sprockets.mixins.correlation.HandlerMixin.prepare`` async
 - Add ``sprockets.mixins.correlation.CorrelationAdapter``
 - Add ``sprockets.mixins.correlation.LoggingMixin``
