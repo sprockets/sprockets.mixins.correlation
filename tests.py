@@ -1,12 +1,18 @@
 import uuid
-import unittest
 
-from tornado import testing, web
+from tornado import gen, testing, web
 
 from sprockets.mixins import correlation
 
 
-class CorrelatedRequestHandler(correlation.HandlerMixin, web.RequestHandler):
+class AsyncPreparer(web.RequestHandler):
+
+    @gen.coroutine
+    def prepare(self):
+        super(AsyncPreparer, self).prepare()
+
+
+class CorrelatedRequestHandler(correlation.HandlerMixin, AsyncPreparer):
 
     def get(self, status_code):
         status_code = int(status_code)
