@@ -1,5 +1,15 @@
 import uuid
 
+import tornado.gen
+
+if tornado.version_info[0] >= 4:
+    from tornado.concurrent import is_future
+else:
+    import tornado.concurrent
+
+    def is_future(maybe_future):
+        return isinstance(maybe_future, tornado.concurrent.Future)
+
 
 class HandlerMixin(object):
     """
@@ -39,11 +49,15 @@ class HandlerMixin(object):
         self.__correlation_id = str(uuid.uuid4())
         super(HandlerMixin, self).__init__(*args, **kwargs)
 
+    @tornado.gen.coroutine
     def prepare(self):
         # Here we want to copy an incoming Correlation-ID header if
         # one exists.  We also want to set it in the outgoing response
         # which the property setter does for us.
-        super(HandlerMixin, self).prepare()
+        maybe_future = super(HandlerMixin, self).prepare()
+        if is_future(maybe_future):
+            yield maybe_future
+
         correlation_id = self.get_request_header(self.__header_name, None)
         if correlation_id is not None:
             self.correlation_id = correlation_id
