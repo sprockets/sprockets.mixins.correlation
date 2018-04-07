@@ -1,7 +1,7 @@
 sprockets.mixins.correlation
 ============================
 
-|Version| |Downloads| |Status| |Coverage| |License| |Documentation|
+|Version| |Status| |License| |Documentation|
 
 This sprocket provides a single mix-in that imbues your ``RequestHandler``
 with a unique correlation ID.  If a correlation ID is present upon input then
@@ -80,7 +80,7 @@ Relayed Correlation ID
    :target: http://coveralls.io/r/sprockets/sprockets.mixins.correlation
 .. |Downloads| image:: https://img.shields.io/pypi/dm/sprockets.mixins.correlation.svg
    :target: https://pypi.python.org/pypi/sprockets.mixins.correlation
-.. |License| image:: https://pypip.in/license/sprockets.mixins.correlation/badge.svg
+.. |License| image:: https://img.shields.io/github/license/sprockets/sprockets.mixins.correlation.svg?
    :target: https://sprocketsmixinscorrelation.readthedocs.io/
 .. |Documentation| image:: https://readthedocs.org/projects/sprocketsmixinscorrelation/badge
    :target: https://sprocketsmixinscorrelation.readthedocs.io/
