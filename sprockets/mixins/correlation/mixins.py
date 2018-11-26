@@ -1,15 +1,6 @@
 import uuid
 
-import tornado.gen
-import tornado.log
-
-if tornado.version_info[0] >= 4:
-    from tornado.concurrent import is_future
-else:
-    import tornado.concurrent
-
-    def is_future(maybe_future):
-        return isinstance(maybe_future, tornado.concurrent.Future)
+from tornado import concurrent, gen, log
 
 
 class HandlerMixin(object):
@@ -50,13 +41,13 @@ class HandlerMixin(object):
         self.__correlation_id = str(uuid.uuid4())
         super(HandlerMixin, self).__init__(*args, **kwargs)
 
-    @tornado.gen.coroutine
+    @gen.coroutine
     def prepare(self):
         # Here we want to copy an incoming Correlation-ID header if
         # one exists.  We also want to set it in the outgoing response
         # which the property setter does for us.
         maybe_future = super(HandlerMixin, self).prepare()
-        if is_future(maybe_future):
+        if concurrent.is_future(maybe_future):
             yield maybe_future
 
         correlation_id = self.get_request_header(self.__header_name, None)
@@ -98,6 +89,58 @@ class HandlerMixin(object):
         return self.request.headers.get(name, default)
 
 
+class AsyncIOHandlerMixin(HandlerMixin):
+    """
+    Mix this in over a ``RequestHandler`` for a correlating header for use
+    with AsyncIO when using ``async def`` and ``await`` style asynchronous
+    request handlers.
+
+    :keyword str correlation_header: the name of the header to use
+        for correlation.  If this keyword is omitted, then the header
+        is named ``Correlation-ID``.
+
+    This mix-in ensures that responses include a header that correlates
+    requests and responses.  If there header is set on the incoming
+    request, then it will be copied to the outgoing response.  Otherwise,
+    a new UUIDv4 will be generated and inserted.  The value can be
+    examined or modified via the ``correlation_id`` property.
+
+    The MRO needs to contain something that resembles a standard
+    :class:`tornado.web.RequestHandler`.  Specifically, we need the
+    following things to be available:
+
+    - :meth:`~tornado.web.RequestHandler.prepare` needs to be called
+      appropriately
+    - :meth:`~tornado.web.RequestHandler.set_header` needs to exist in
+      the MRO and it needs to overwrite the header value
+    - :meth:`~tornado.web.RequestHandler.set_default_headers` should be
+      called to establish the default header values
+    - ``self.request`` is a object that has a ``headers`` property that
+      contains the request headers as a ``dict``.
+
+    """
+    def __init__(self, *args, **kwargs):
+        # correlation_id is used from within set_default_headers
+        # which is called from within super().__init__() so we need
+        # to make sure that it is set *BEFORE* we call super.
+        self.__header_name = kwargs.pop(
+            'correlation_header', 'Correlation-ID')
+        self.__correlation_id = str(uuid.uuid4())
+        super(AsyncIOHandlerMixin, self).__init__(*args, **kwargs)
+
+    async def prepare(self):
+        # Here we want to copy an incoming Correlation-ID header if
+        # one exists.  We also want to set it in the outgoing response
+        # which the property setter does for us.
+        maybe_future = super(HandlerMixin, self).prepare()
+        if concurrent.is_future(maybe_future):
+            await maybe_future
+
+        correlation_id = self.get_request_header(self.__header_name, None)
+        if correlation_id is not None:
+            self.correlation_id = correlation_id
+
+
 def correlation_id_logger(handler):
     """ Custom Tornado access log writer that appends correlation-id.
 
@@ -113,11 +156,11 @@ def correlation_id_logger(handler):
         is processing the client request.
     """
     if handler.get_status() < 400:
-        log_method = tornado.log.access_log.info
+        log_method = log.access_log.info
     elif handler.get_status() < 500:
-        log_method = tornado.log.access_log.warning
+        log_method = log.access_log.warning
     else:
-        log_method = tornado.log.access_log.error
+        log_method = log.access_log.error
     request_time = 1000.0 * handler.request.request_time()
     correlation_id = getattr(handler, "correlation_id", None)
     if correlation_id is None:

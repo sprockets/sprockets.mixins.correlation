@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import codecs
+from os import path
 import sys
 
 import setuptools
@@ -7,23 +8,22 @@ import setuptools
 from sprockets.mixins import correlation
 
 
-def read_requirements_file(req_name):
+def read_requirements(name):
     requirements = []
     try:
-        with codecs.open(req_name, encoding='utf-8') as req_file:
-            for req_line in req_file:
-                if '#' in req_line:
-                    req_line = req_line[0:req_line.find('#')].strip()
-                if req_line:
-                    requirements.append(req_line.strip())
+        with open(path.join('requires', name)) as req_file:
+            for line in req_file:
+                if '#' in line:
+                    line = line[:line.index('#')]
+                line = line.strip()
+                if line.startswith('-r'):
+                    requirements.extend(read_requirements(line[2:].strip()))
+                elif line and not line.startswith('-'):
+                    requirements.append(line)
     except IOError:
         pass
     return requirements
 
-
-install_requires = read_requirements_file('requirements.txt')
-setup_requires = read_requirements_file('setup-requirements.txt')
-tests_require = read_requirements_file('test-requirements.txt')
 
 setuptools.setup(
     name='sprockets.mixins.correlation',
@@ -35,16 +35,15 @@ setuptools.setup(
     author_email='api@aweber.com',
     license=codecs.open('LICENSE', encoding='utf-8').read(),
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries',
@@ -52,9 +51,8 @@ setuptools.setup(
     ],
     packages=setuptools.find_packages(),
     namespace_packages=['sprockets'],
-    install_requires=install_requires,
-    setup_requires=setup_requires,
-    tests_require=tests_require,
+    install_requires=read_requirements('requirements.txt'),
+    tests_require=read_requirements('test-requirements.txt'),
     test_suite='nose.collector',
     zip_safe=True,
 )

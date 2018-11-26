@@ -1,5 +1,5 @@
 try:
-    from .mixins import HandlerMixin
+    from .mixins import HandlerMixin, AsyncIOHandlerMixin
 
 except ImportError as error:
 
@@ -7,6 +7,10 @@ except ImportError as error:
         def __init__(self, *args, **kwargs):
             raise error
 
+
+    class AsyncIOHandlerMixin(object):
+        def __init__(self, *args, **kwargs):
+            raise error
 
 version_info = (1, 0, 2)
 __version__ = '.'.join(str(v) for v in version_info[:3])
