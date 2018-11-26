@@ -1,16 +1,11 @@
 try:
-    from .mixins import HandlerMixin, AsyncIOHandlerMixin
-
-except ImportError as error:
+    from .mixins import HandlerMixin
+except ImportError:
 
     class HandlerMixin(object):
         def __init__(self, *args, **kwargs):
-            raise error
+            raise ImportError
 
 
-    class AsyncIOHandlerMixin(object):
-        def __init__(self, *args, **kwargs):
-            raise error
-
-version_info = (1, 0, 2)
+version_info = (2, 0, 0)
 __version__ = '.'.join(str(v) for v in version_info[:3])
