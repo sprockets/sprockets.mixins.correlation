@@ -4,7 +4,6 @@ python:
   - 3.5
   - 3.6
   - 3.7
-  - pypy3
 install:
   - pip install -e .
   - pip install -r test-requirements.txt
