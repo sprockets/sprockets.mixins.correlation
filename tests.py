@@ -23,18 +23,15 @@ class CorrelationMixinTests(testing.AsyncHTTPTestCase):
         ])
 
     def test_that_correlation_id_is_returned_when_successful(self):
-        self.http_client.fetch(self.get_url('/status/200'), self.stop)
-        response = self.wait()
+        response = self.fetch('/status/200')
         self.assertIsNotNone(response.headers.get('Correlation-ID'))
 
     def test_that_correlation_id_is_returned_in_error(self):
-        self.http_client.fetch(self.get_url('/status/500'), self.stop)
-        response = self.wait()
+        response = self.fetch('/status/500')
         self.assertIsNotNone(response.headers.get('Correlation-ID'))
 
     def test_that_correlation_id_is_copied_from_request(self):
         correlation_id = uuid.uuid4().hex
-        self.http_client.fetch(self.get_url('/status/200'), self.stop,
-                               headers={'Correlation-Id': correlation_id})
-        response = self.wait()
+        response = self.fetch('/status/500',
+                              headers={'Correlation-Id': correlation_id})
         self.assertEqual(response.headers['correlation-id'], correlation_id)

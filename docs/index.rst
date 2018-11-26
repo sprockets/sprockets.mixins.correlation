@@ -8,6 +8,10 @@ correlation.HandlerMixin
 .. autoclass:: sprockets.mixins.correlation.HandlerMixin
    :members:
 
+.. autoclass:: sprockets.mixins.correlation.AsyncIOHandlerMixin
+   :members:
+
+
 Contributing to this Library
 ----------------------------
 
