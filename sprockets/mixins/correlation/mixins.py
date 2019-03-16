@@ -46,7 +46,7 @@ class HandlerMixin(object):
         # one exists.  We also want to set it in the outgoing response
         # which the property setter does for us.
         maybe_future = super(HandlerMixin, self).prepare()
-        if concurrent.is_future(maybe_future):
+        if concurrent.is_future(maybe_future):  # pragma: nocover
             await maybe_future
 
         correlation_id = self.get_request_header(self.__header_name, None)

@@ -5,6 +5,7 @@ Version History
 ~~~~~~~~~~~~~~~~~~~~~~
 - Add support for Tornado 6
 - Move requirements files to requires/
+- Increase test coverage
 
 `2.0.0`_ (26-Nov-2018)
 ~~~~~~~~~~~~~~~~~~~~~~
