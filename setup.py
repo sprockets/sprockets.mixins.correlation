@@ -51,8 +51,8 @@ setuptools.setup(
     ],
     packages=setuptools.find_packages(),
     namespace_packages=['sprockets'],
-    install_requires=read_requirements('requirements.txt'),
-    tests_require=read_requirements('test-requirements.txt'),
+    install_requires=read_requirements('installation.txt'),
+    tests_require=read_requirements('testing.txt'),
     test_suite='nose.collector',
     zip_safe=True,
 )
