@@ -57,11 +57,11 @@ class CorrelationIDLoggerTests(testing.AsyncHTTPTestCase):
         self.patcher = unittest.mock.patch(
             'sprockets.mixins.correlation.mixins.log.access_log')
         self.access_logger = self.patcher.start()
-        super(CorrelationIDLoggerTests, self).setUp()
+        super().setUp()
 
     def tearDown(self):
         self.patcher.stop()
-        super(CorrelationIDLoggerTests, self).tearDown()
+        super().tearDown()
 
     def test_lt_400_logs_info(self):
         for status in (200, 202):
