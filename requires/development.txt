@@ -1,0 +1,7 @@
+-r requires/installation.txt
+-r requires/testing.txt
+-e .
+
+flake8
+sphinx>=1.2,<2
+sphinx-rtd-theme>=0.1,<1.0
