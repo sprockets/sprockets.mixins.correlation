@@ -1,4 +1,3 @@
--r installation.txt
 -r testing.txt
 -e .
 
