@@ -1,6 +1,7 @@
+import asyncio
 import uuid
 
-from tornado import concurrent, log
+from tornado import log
 
 
 class HandlerMixin(object):
@@ -45,9 +46,9 @@ class HandlerMixin(object):
         # Here we want to copy an incoming Correlation-ID header if
         # one exists.  We also want to set it in the outgoing response
         # which the property setter does for us.
-        maybe_future = super(HandlerMixin, self).prepare()
-        if concurrent.is_future(maybe_future):
-            await maybe_future
+        maybe_coro = super(HandlerMixin, self).prepare()
+        if asyncio.iscoroutine(maybe_coro):
+            await maybe_coro
 
         correlation_id = self.get_request_header(self.__header_name, None)
         if correlation_id is not None:
