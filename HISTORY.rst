@@ -1,6 +1,11 @@
 Version History
 ---------------
 
+`3.0.0`_ (18-Dec-2019)
+~~~~~~~~~~~~~~~~~~~~~~
+- Dropped support for Tornado 4
+- Fixed support for async prepare in superclasses of ``HandlerMixin``
+
 `2.0.1`_ (18-Mar-2019)
 ~~~~~~~~~~~~~~~~~~~~~~
 - Add support for Tornado 6
@@ -21,6 +26,7 @@ Version History
 ~~~~~~~~~~~~~~~~~~~~~~
  - Adds ``sprockets.mixins.correlation.HandlerMixin``
 
+.. _`3.0.0`: https://github.com/sprockets/sprockets.mixins.correlation/compare/3.0.0...2.0.1
 .. _`2.0.1`: https://github.com/sprockets/sprockets.mixins.correlation/compare/2.0.0...2.0.1
 .. _`2.0.0`: https://github.com/sprockets/sprockets.mixins.correlation/compare/1.0.2...2.0.0
 .. _`1.0.2`: https://github.com/sprockets/sprockets.mixins.correlation/compare/1.0.1...1.0.2
