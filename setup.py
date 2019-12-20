@@ -33,7 +33,7 @@ setuptools.setup(
     url='https://github.com/sprockets/sprockets.mixins.correlation.git',
     author='AWeber Communications',
     author_email='api@aweber.com',
-    license=codecs.open('LICENSE', encoding='utf-8').read(),
+    license='BSD',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
